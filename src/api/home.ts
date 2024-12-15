@@ -1,6 +1,11 @@
 import { LocationQueryValue } from 'vue-router';
 import request from '@/utils/request';
 
+export function getSysStatusFromCache() {
+  return request({
+    url: '/api/SysStatus/GetFromCache'
+  })
+}
 
 export function getData() {
   return request({
