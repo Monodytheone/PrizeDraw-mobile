@@ -10,8 +10,8 @@
   
       <!-- 中间展示滚动的员工信息 -->
       <div class="employee-panel">
-        <div class="employee-info">{{ currentEmployee.userId }}</div>
-        <div class="employee-info">{{ currentEmployee.userName }}</div>
+        <div class="employee-info">{{ hideEmployeeInfo ? '*******' : currentEmployee.userId }}</div>
+        <div class="employee-info">{{ hideEmployeeInfo ? '**' : currentEmployee.userName }}</div>
         <div class="employee-info">{{ currentEmployee.department }}</div>
       </div>
     </div>
@@ -24,6 +24,10 @@
   const props = defineProps({
     data: {
       type: Object,
+      required: true
+    },
+    hideEmployeeInfo: {
+      type: Boolean,
       required: true
     }
   });

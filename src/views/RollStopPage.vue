@@ -10,8 +10,8 @@
 
         <!-- 中间展示当前获奖者信息 -->
         <div class="employee-panel">
-            <div class="employee-info">{{ data.currentWinner.userId }}</div>
-            <div class="employee-info">{{ data.currentWinner.userName }}</div>
+            <div class="employee-info">{{ hideEmployeeInfo ? '*******' : data.currentWinner.userId }}</div>
+            <div class="employee-info">{{ hideEmployeeInfo ? '**' : data.currentWinner.userName }}</div>
             <div class="employee-info">{{ data.currentWinner.department }}</div>
         </div>
 
@@ -20,7 +20,14 @@
             <el-table :data="data.prizeRecordOfCurrentRafflePrize" border style="width: 100%;">
                 <el-table-column prop="rafflePrizeName" label="奖项" width="80"></el-table-column>
                 <el-table-column prop="prizeAmount" label="金额" width="60"></el-table-column>
-                <el-table-column prop="winnerName" label="中奖人" width="80"></el-table-column>
+                <el-table-column label="中奖人" width="80">
+                    <template #default="scope">
+                        <span>{{
+                            hideEmployeeInfo ? '*'.repeat(scope.row.winnerName && scope.row.winnerName.length) :
+                            scope.row.winnerName
+                            }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="winnerDepartment" label="部门" width="80"></el-table-column>
                 <el-table-column prop="winTime" label="中奖时间" width="120">
                     <template #default="scope">
@@ -41,6 +48,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    hideEmployeeInfo: {
+        type: Boolean,
+        required: true
+    }
 });
 
 // 格式化中奖时间

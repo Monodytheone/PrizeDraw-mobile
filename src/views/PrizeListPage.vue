@@ -2,13 +2,7 @@
   <div class="content">
     <!-- 奖项列表 -->
     <div class="title">奖项列表</div>
-    <el-table
-      :data="tableData.rafflePrizes"
-      class="highlight-table"
-      style="width: 100%"
-      border
-      :fit="true"
-    >
+    <el-table :data="tableData.rafflePrizes" class="highlight-table" style="width: 100%" border :fit="true">
       <el-table-column prop="prizeName" label="奖项名称" :resizable="false" />
       <el-table-column prop="prizeAmount" label="金额" :resizable="false" />
       <el-table-column prop="quantity" label="数量" :resizable="false" />
@@ -18,16 +12,25 @@
 
     <!-- 中奖记录 -->
     <div class="title">中奖记录</div>
-    <el-table
-      :data="tableData.prizeRecords"
-      style="width: 100%"
-      border
-      :cell-style="{ padding: '6px' }"
-    >
+    <el-table :data="tableData.prizeRecords" style="width: 100%" border :cell-style="{ padding: '6px' }">
       <el-table-column prop="rafflePrizeName" label="奖项名称" />
       <el-table-column prop="prizeAmount" label="中奖金额" />
-      <el-table-column prop="winnerId" label="中奖人工号" />
-      <el-table-column prop="winnerName" label="中奖人姓名" />
+      <el-table-column label="中奖人工号">
+        <template #default="scope">
+          <span>{{
+            hideEmployeeInfo ? '*'.repeat(scope.row.winnerId && scope.row.winnerId.length) :
+              scope.row.winnerId
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="中奖人姓名">
+        <template #default="scope">
+          <span>{{
+            hideEmployeeInfo ? '*'.repeat(scope.row.winnerName && scope.row.winnerName.length) :
+              scope.row.winnerName
+          }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="winnerDepartment" label="中奖人部门" />
       <el-table-column prop="winTime" label="中奖时间" />
     </el-table>
@@ -41,26 +44,22 @@
 
     <!-- 员工名字列表 -->
     <div class="title">员工名字</div>
-    <el-table
-      :data="tableData.employees"
-      class="employee-table"
-      style="width: 100%; height: 450px"
-      border
-    >
+    <el-table :data="tableData.employees" class="employee-table" style="width: 100%; height: 450px" border>
       <el-table-column prop="userId" label="工号" />
       <el-table-column prop="userName" label="姓名" />
       <el-table-column prop="department" label="部门" />
-      <el-table-column label="是否已中奖">
+      <el-table-column v-if="hideEmployeeInfo === false" label="是否已中奖">
         <template #default="scope">
-          <span
-            :style="{
-              color: scope.row.hasWon ? 'red' : '#000000',
-              fontWeight: 'bold'
-            }"
-          >
+          <span :style="{
+            color: scope.row.hasWon ? 'red' : '#000000',
+            fontWeight: 'bold'
+          }">
             {{ scope.row.hasWon ? '已中奖' : '未中奖' }}
           </span>
         </template>
+      </el-table-column>
+      <el-table-column v-if="hideEmployeeInfo" label="是否已中奖">
+        ***
       </el-table-column>
     </el-table>
   </div>
@@ -68,7 +67,8 @@
 
 <script setup>
 const props = defineProps({
-  data: Object
+  data: Object,
+  hideEmployeeInfo: Boolean
 });
 
 const tableData = props.data;
@@ -101,19 +101,24 @@ const tableData = props.data;
 }
 
 .highlight-table :deep(.el-table__header-wrapper) {
-  background-color: #333333; /* 表头背景颜色 */
+  background-color: #333333;
+  /* 表头背景颜色 */
 }
 
 .highlight-table :deep(.el-table__body-wrapper .el-table__row td) {
-  background-color: #ffd700 !important; /* 金黄色单元格 */
-  color: #333333 !important; /* 深色字体 */
+  background-color: #ffd700 !important;
+  /* 金黄色单元格 */
+  color: #333333 !important;
+  /* 深色字体 */
   font-weight: bold;
   text-align: center;
 }
 
 .highlight-table :deep(.el-table__header th) {
-  background-color: #ffcc00 !important; /* 表头背景金黄色 */
-  color: #333333 !important; /* 字体深灰色 */
+  background-color: #ffcc00 !important;
+  /* 表头背景金黄色 */
+  color: #333333 !important;
+  /* 字体深灰色 */
   font-weight: bold;
   text-align: center;
 }
