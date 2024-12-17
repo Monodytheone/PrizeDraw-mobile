@@ -1,9 +1,9 @@
 <template>
     <div>
         <NotStart v-if="sysStatus === 1" />
-        <PrizeListPage v-if="sysStatus === 2 || sysStatus === 5" :data="sysStatusRes.started_2_5" />
-        <RollingPage v-if="sysStatus === 3" :data="sysStatusRes.rolling_3" />
-        <RollStopPage v-if="sysStatus === 4" :data="sysStatusRes.stopRoll_4" />
+        <PrizeListPage v-if="sysStatus === 2 || sysStatus === 5" :data="sysStatusRes.started_2_5" :hideEmployeeInfo="hideEmployeeInfo" />
+        <RollingPage v-if="sysStatus === 3" :data="sysStatusRes.rolling_3" :hideEmployeeInfo="hideEmployeeInfo" />
+        <RollStopPage v-if="sysStatus === 4" :data="sysStatusRes.stopRoll_4" :hideEmployeeInfo="hideEmployeeInfo" />
     </div>
 </template>
 
@@ -18,12 +18,14 @@ import * as signalR from '@microsoft/signalr';
 
 const sysStatus = ref(0); // 系统状态
 const sysStatusRes = ref();
-let signalrConnection;
+const hideEmployeeInfo = ref(false);
 
+let signalrConnection;
 
 onMounted(async () => {
     sysStatusRes.value = await getSysStatusFromCache();
     sysStatus.value = sysStatusRes.value.sysStatus;
+    hideEmployeeInfo.value = sysStatusRes.value.hideEmployeeInfo;
 
     const options = { skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets };
     signalrConnection = new signalR.HubConnectionBuilder()
@@ -61,6 +63,10 @@ onMounted(async () => {
     signalrConnection.on('SystemReset', data => {
         sysStatus.value = 1;
     });
+
+    signalrConnection.on('ChangeHideEmployeeInfoStatus', data => {
+        hideEmployeeInfo.value = data;
+    })
 })
 
 </script>
