@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+    <div class="title">公证人：<a style="color:burlywood;">{{ $attrs.notary }}</a></div>
     <!-- 奖项列表 -->
     <div class="title">奖项列表</div>
     <el-table :data="tableData.rafflePrizes" class="highlight-table" style="width: 100%" border :fit="true">

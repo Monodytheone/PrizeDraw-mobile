@@ -51,6 +51,9 @@ const props = defineProps({
     hideEmployeeInfo: {
         type: Boolean,
         required: true
+    },
+    notary: {
+        type: String
     }
 });
 
